@@ -1,0 +1,363 @@
+Endpoint: /api.php?action=getSensorsDataLatest
+Method: GET
+Description: Returns the latest sensor data for all sensors.
+
+Request Parameters:
+None
+
+Response Parameters:
+- success (boolean): Indicates whether the request was successful.
+- sensors (array): An array of sensor data objects.
+  - chipid (integer): The ID of the sensor.
+  - location (string): The location of the sensor.
+  - createdAt (string): The date and time the sensor was created.
+  - updatedAt (string): The date and time the sensor was last updated.
+  - data (array): An array of sensor data objects.
+    - temperature (float): The temperature reading from the sensor.
+    - humidity (float): The humidity reading from the sensor.
+    - pressure (float): The pressure reading from the sensor.
+    - createdAt (string): The date and time the sensor data was created.
+
+Example Request:
+GET /api.php?action=getSensorsDataLatest
+
+Example Response:
+{
+  "success": true,
+  "sensors": [
+    {
+      "chipid": 1,
+      "location": "Living Room",
+      "createdAt": "2021-10-01 10:00:00",
+      "updatedAt": "2021-10-01 10:05:00",
+      "data": [
+        {
+          "temperature": 23.5,
+          "humidity": 50.0,
+          "pressure": 1013.25,
+          "createdAt": "2021-10-01 10:05:00"
+        }
+      ]
+    },
+    {
+      "chipid": 2,
+      "location": "Bedroom",
+      "createdAt": "2021-10-01 10:00:00",
+      "updatedAt": "2021-10-01 10:05:00",
+      "data": [
+        {
+          "temperature": 22.0,
+          "humidity": 55.0,
+          "pressure": 1012.50,
+          "createdAt": "2021-10-01 10:05:00"
+        }
+      ]
+    }
+  ]
+}
+
+Endpoint: /api.php?action=getSensorsDataByDates
+Method: GET
+Description: Returns sensor data for all sensors between the specified start and end dates.
+
+Request Parameters:
+- startDate (string): The start date in the format YYYY-MM-DD.
+- endDate (string): The end date in the format YYYY-MM-DD.
+
+Response Parameters:
+- success (boolean): Indicates whether the request was successful.
+- sensors (array): An array of sensor data objects.
+  - chipid (integer): The ID of the sensor.
+  - location (string): The location of the sensor.
+  - createdAt (string): The date and time the sensor was created.
+  - updatedAt (string): The date and time the sensor was last updated.
+  - data (array): An array of sensor data objects.
+    - temperature (float): The temperature reading from the sensor.
+    - humidity (float): The humidity reading from the sensor.
+    - pressure (float): The pressure reading from the sensor.
+    - createdAt (string): The date and time the sensor data was created.
+
+Example Request:
+GET /api.php?action=getSensorsDataByDates&startDate=2021-10-01&endDate=2021-10-02
+
+Example Response:
+{
+  "success": true,
+  "sensors": [
+    {
+      "chipid": 1,
+      "location": "Living Room",
+      "createdAt": "2021-10-01 10:00:00",
+      "updatedAt": "2021-10-01 10:05:00",
+      "data": [
+        {
+          "temperature": 23.5,
+          "humidity": 50.0,
+          "pressure": 1013.25,
+          "createdAt": "2021-10-01 10:05:00"
+        }
+      ]
+    },
+    {
+      "chipid": 2,
+      "location": "Bedroom",
+      "createdAt": "2021-10-01 10:00:00",
+      "updatedAt": "2021-10-01 10:05:00",
+      "data": [
+        {
+          "temperature": 22.0,
+          "humidity": 55.0,
+          "pressure": 1012.50,
+          "createdAt": "2021-10-01 10:05:00"
+        }
+      ]
+    }
+  ]
+}
+
+Endpoint: /api.php?action=getSensorsData
+Method: GET
+Description: Returns all sensor data for all sensors.
+
+Request Parameters:
+None
+
+Response Parameters:
+- success (boolean): Indicates whether the request was successful.
+- sensors (array): An array of sensor data objects.
+  - chipid (integer): The ID of the sensor.
+  - location (string): The location of the sensor.
+  - createdAt (string): The date and time the sensor was created.
+  - updatedAt (string): The date and time the sensor was last updated.
+  - data (array): An array of sensor data objects.
+    - temperature (float): The temperature reading from the sensor.
+    - humidity (float): The humidity reading from the sensor.
+    - pressure (float): The pressure reading from the sensor.
+    - createdAt (string): The date and time the sensor data was created.
+
+Example Request:
+GET /api.php?action=getSensorsData
+
+Example Response:
+{
+  "success": true,
+  "sensors": [
+    {
+      "chipid": 1,
+      "location": "Living Room",
+      "createdAt": "2021-10-01 10:00:00",
+      "updatedAt": "2021-10-01 10:05:00",
+      "data": [
+        {
+          "temperature": 23.5,
+          "humidity": 50.0,
+          "pressure": 1013.25,
+          "createdAt": "2021-10-01 10:05:00"
+        },
+        {
+          "temperature": 23.0,
+          "humidity": 51.0,
+          "pressure": 1013.50,
+          "createdAt": "2021-10-01 10:10:00"
+        }
+      ]
+    },
+    {
+      "chipid": 2,
+      "location": "Bedroom",
+      "createdAt": "2021-10-01 10:00:00",
+      "updatedAt": "2021-10-01 10:05:00",
+      "data": [
+        {
+          "temperature": 22.0,
+          "humidity": 55.0,
+          "pressure": 1012.50,
+          "createdAt": "2021-10-01 10:05:00"
+        },
+        {
+          "temperature": 22.5,
+          "humidity": 54.0,
+          "pressure": 1012.75,
+          "createdAt": "2021-10-01 10:10:00"
+        }
+      ]
+    }
+  ]
+}
+
+Endpoint: /api.php?action=getSensorDataByDates
+Method: GET
+Description: Returns sensor data for all sensors between the specified start and end dates.
+
+Request Parameters:
+- startDate (string): The start date in the format YYYY-MM-DD.
+- endDate (string): The end date in the format YYYY-MM-DD.
+
+Response Parameters:
+- success (boolean): Indicates whether the request was successful.
+- sensorData (array): An array of sensor data objects.
+  - chipid (integer): The ID of the sensor.
+  - location (string): The location of the sensor.
+  - createdAt (string): The date and time the sensor was created.
+  - updatedAt (string): The date and time the sensor was last updated.
+  - data (array): An array of sensor data objects.
+    - temperature (float): The temperature reading from the sensor.
+    - humidity (float): The humidity reading from the sensor.
+    - pressure (float): The pressure reading from the sensor.
+    - createdAt (string): The date and time the sensor data was created.
+
+Example Request:
+GET /api.php?action=getSensorDataByDates&startDate=2021-10-01&endDate=2021-10-02
+
+Example Response:
+{
+  "success": true,
+  "sensorData": [
+    {
+      "chipid": 1,
+      "location": "Living Room",
+      "createdAt": "2021-10-01 10:00:00",
+      "updatedAt": "2021-10-01 10:05:00",
+      "data": [
+        {
+          "temperature": 23.5,
+          "humidity": 50.0,
+          "pressure": 1013.25,
+          "createdAt": "2021-10-01 10:05:00"
+        }
+      ]
+    },
+    {
+      "chipid": 2,
+      "location": "Bedroom",
+      "createdAt": "2021-10-01 10:00:00",
+      "updatedAt": "2021-10-01 10:05:00",
+      "data": [
+        {
+          "temperature": 22.0,
+          "humidity": 55.0,
+          "pressure": 1012.50,
+          "createdAt": "2021-10-01 10:05:00"
+        }
+      ]
+    }
+  ]
+}
+
+Endpoint: /api.php?action=getSensorData
+Method: GET
+Description: Returns sensor data for a specific sensor.
+
+Request Parameters:
+- chipid (integer): The ID of the sensor.
+
+Response Parameters:
+- success (boolean): Indicates whether the request was successful.
+- sensorData (object): A sensor data object.
+  - chipid (integer): The ID of the sensor.
+  - location (string): The location of the sensor.
+  - createdAt (string): The date and time the sensor was created.
+  - updatedAt (string): The date and time the sensor was last updated.
+  - data (array): An array of sensor data objects.
+    - temperature (float): The temperature reading from the sensor.
+    - humidity (float): The humidity reading from the sensor.
+    - pressure (float): The pressure reading from the sensor.
+    - createdAt (string): The date and time the sensor data was created.
+
+Example Request:
+GET /api.php?action=getSensorData&chipid=1
+
+Example Response:
+{
+  "success": true,
+  "sensorData": {
+    "chipid": 1,
+    "location": "Living Room",
+    "createdAt": "2021-10-01 10:00:00",
+    "updatedAt": "2021-10-01 10:05:00",
+    "data": [
+      {
+        "temperature": 23.5,
+        "humidity": 50.0,
+        "pressure": 1013.25,
+        "createdAt": "2021-10-01 10:05:00"
+      },
+      {
+        "temperature": 23.0,
+        "humidity": 51.0,
+        "pressure": 1013.50,
+        "createdAt": "2021-10-01 10:10:00"
+      }
+    ]
+  }
+}
+
+Endpoint: /api.php?action=createSensor
+Method: POST
+Description: Creates a new sensor with the specified chip ID and location.
+
+Request Parameters:
+- chipid (integer): The ID of the sensor.
+- location (string): The location of the sensor.
+
+Response Parameters:
+- success (boolean): Indicates whether the request was successful.
+- message (string): A message indicating whether the sensor was created or not.
+- data (object): The sensor data object that was created.
+
+Example Request:
+POST /api.php?action=createSensor
+Content-Type: application/json
+
+{
+  "chipid": 1,
+  "location": "Living Room"
+}
+
+Example Response:
+{
+  "success": true,
+  "message": "Sensor created",
+  "data": {
+    "chipid": 1,
+    "location": "Living Room"
+  }
+}
+
+Endpoint: /api.php?action=insertData
+Method: POST
+Description: Inserts sensor data into the database.
+
+Request Parameters:
+- chipid (integer): The ID of the sensor.
+- temperature (float): The temperature reading from the sensor.
+- humidity (float): The humidity reading from the sensor.
+- pressure (float): The pressure reading from the sensor.
+
+Response Parameters:
+- success (boolean): Indicates whether the request was successful.
+- message (string): A message indicating whether the data was inserted or not.
+- data (object): The sensor data object that was inserted.
+
+Example Request:
+POST /api.php?action=insertData
+Content-Type: application/json
+
+{
+  "chipid": 1,
+  "temperature": 23.5,
+  "humidity": 50.0,
+  "pressure": 1013.25
+}
+
+Example Response:
+{
+  "success": true,
+  "message": "Data inserted",
+  "data": {
+    "chipid": 1,
+    "temperature": 23.5,
+    "humidity": 50.0,
+    "pressure": 1013.25
+  }
+}
