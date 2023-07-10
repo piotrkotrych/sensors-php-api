@@ -424,9 +424,13 @@ switch ($_GET['action']) {
     break;
 
   case 'grafana':
+
+    $limit = $_GET['limit'];
+
     $sensors = array();
     //geta all info from database using prepared statements and left join data, max rows 5000
-    $stmt = $conn->prepare("SELECT sensor_info.chipid, sensor_info.location, sensor_data.temperature, sensor_data.humidity, sensor_data.pressure, sensor_data.createdAt FROM `sensor_info` LEFT JOIN `sensor_data` ON sensor_info.chipid = sensor_data.chipid ORDER BY sensor_data.createdAt DESC LIMIT 5000");
+    $stmt = $conn->prepare("SELECT sensor_info.chipid, sensor_info.location, sensor_data.temperature, sensor_data.humidity, sensor_data.pressure, sensor_data.createdAt FROM `sensor_info` LEFT JOIN `sensor_data` ON sensor_info.chipid = sensor_data.chipid ORDER BY sensor_data.createdAt DESC LIMIT ?");
+    $stmt->bind_param("i", $limit);
     $stmt->execute();
 
     //bind result set columns to variables
@@ -451,6 +455,11 @@ switch ($_GET['action']) {
     } else {
       echo json_encode(array('success' => false, 'message' => 'Sensors not found'));
     }
+
+    $stmt->close();
+    exit();
+
+    break;
   default:
     echo "Wrong action";
     break;
