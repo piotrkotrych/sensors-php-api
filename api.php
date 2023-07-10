@@ -20,6 +20,12 @@ $dbname = $_ENV['DB_NAME'];
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
+//set charset to utf8
+$conn->set_charset("utf8");
+
+//set mysql timezone to berlin
+$conn->query("SET time_zone = '+02:00'");
+
 //check connection
 if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
