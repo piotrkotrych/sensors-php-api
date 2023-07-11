@@ -52,6 +52,7 @@ switch ($_GET['action']) {
     if ($stmt->execute()) {
       //commit transaction
       $conn->commit();
+      //status 200
       echo json_encode(array('success' => true, 'message' => 'Data inserted', 'data' => $data));
     } else {
       //get error 
@@ -143,16 +144,27 @@ switch ($_GET['action']) {
 
       //echo error if exists
       if ($error) {
+
+        http_response_code(500);
         echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
       }
 
       //echo result if exists
       if (!empty($sensor)) {
+        //status 200
+
+        http_response_code(200);
+
+
         echo json_encode(array('success' => true, 'message' => 'Sensor found', 'sensor' => $sensor));
       } else {
+
+        http_response_code(404);
         echo json_encode(array('success' => false, 'message' => 'Sensor not found'));
       }
     } else {
+
+      http_response_code(404);
       echo json_encode(array('success' => false, 'message' => 'Sensor not found'));
     }
 
