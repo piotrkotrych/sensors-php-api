@@ -1,11 +1,13 @@
 <?php
 //dotenv load
 require_once __DIR__ . '/vendor/autoload.php';
+//require utils.php
+require_once __DIR__ . '/utils.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-error_reporting(E_ALL);
-ini_set('display_errors', 'On');
+// error_reporting(E_ALL);
+// ini_set('display_errors', 'On');
 
 //headers to bypass cors
 header("Access-Control-Allow-Origin: *");
@@ -94,9 +96,11 @@ switch ($_GET['action']) {
     break;
 
   case 'getSensorData':
-    //get chip id from GET
-    $chipid = $_GET['chipid'];
 
+    //check if chipid is set
+    $chipid = get_chipid($_GET['chipid']);
+
+    //create empty array
     $sensor = array();
 
     //get sensor info from database using prepared statements
@@ -117,7 +121,7 @@ switch ($_GET['action']) {
 
     //echo error if exists
     if ($error) {
-      echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+      send_response(500, false, 'Error', array('error' => $error));
     }
 
     //echo result if exists
@@ -144,28 +148,17 @@ switch ($_GET['action']) {
 
       //echo error if exists
       if ($error) {
-
-        http_response_code(500);
-        echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+        send_response(500, false, 'Error', array('error' => $error));
       }
 
       //echo result if exists
       if (!empty($sensor)) {
-        //status 200
-
-        http_response_code(200);
-
-
-        echo json_encode(array('success' => true, 'message' => 'Sensor found', 'sensor' => $sensor));
+        send_response(200, true, 'Sensor data', $sensor);
       } else {
-
-        http_response_code(404);
-        echo json_encode(array('success' => false, 'message' => 'Sensor not found'));
+        send_response(404, false, 'Sensor data not found');
       }
     } else {
-
-      http_response_code(404);
-      echo json_encode(array('success' => false, 'message' => 'Sensor not found'));
+      send_response(404, false, 'Sensor not found');
     }
 
     $stmt->close();
@@ -175,11 +168,21 @@ switch ($_GET['action']) {
 
     //same as getSensorData but data is between two dates
   case 'getSensorDataByDates':
-    //get chip id from GET
-    $chipid = $_GET['chipid'];
-    $from = $_GET['from'];
-    $to = $_GET['to'];
+    // //get chip id from GET
+    // $chipid = $_GET['chipid'];
+    // $from = $_GET['from'];
+    // $to = $_GET['to'];
 
+    //check if chipid, from, to is set
+    $chipid = get_chipid($_GET['chipid']);
+
+    //check if from is set and is valid date
+    $from = get_date($_GET['from']);
+
+    //same for to
+    $to = get_date($_GET['to']);
+
+    //create empty array
     $sensor = array();
 
     //get sensor info from database using prepared statements
@@ -200,7 +203,7 @@ switch ($_GET['action']) {
 
     //echo error if exists
     if ($error) {
-      echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+      send_response(500, false, 'Error', array('error' => $error));
     }
 
     //echo result if exists
@@ -230,17 +233,17 @@ switch ($_GET['action']) {
 
       //echo error if exists
       if ($error) {
-        echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+        send_response(500, false, 'Error', array('error' => $error));
       }
 
       //echo result if exists
       if (!empty($sensor)) {
-        echo json_encode(array('success' => true, 'message' => 'Sensor found', 'sensor' => $sensor));
+        send_response(200, true, 'Sensor data', $sensor);
       } else {
-        echo json_encode(array('success' => false, 'message' => 'Sensor not found'));
+        send_response(404, false, 'Sensor data not found');
       }
     } else {
-      echo json_encode(array('success' => false, 'message' => 'Sensor not found'));
+      send_response(404, false, 'Sensor not found');
     }
 
     $stmt->close();
@@ -268,7 +271,7 @@ switch ($_GET['action']) {
 
     //echo error if exists
     if ($error) {
-      echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+      send_response(500, false, 'Error', array('error' => $error));
     }
 
     //echo result if exists
@@ -297,12 +300,12 @@ switch ($_GET['action']) {
 
         //echo error if exists
         if ($error) {
-          echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+          send_response(500, false, 'Error', array('error' => $error));
         }
       }
-      echo json_encode(array('success' => true, 'message' => 'Sensors found', 'qty' => count($sensors), 'sensors' => $sensors));
+      send_response(200, true, 'Sensor data', $sensors);
     } else {
-      echo json_encode(array('success' => false, 'message' => 'Sensors not found'));
+      send_response(404, false, 'Sensor data not found');
     }
 
     $stmt->close();
@@ -329,7 +332,7 @@ switch ($_GET['action']) {
 
     //echo error if exists
     if ($error) {
-      echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+      send_response(500, false, 'Error', array('error' => $error));
     }
 
     //echo result if exists
@@ -358,12 +361,12 @@ switch ($_GET['action']) {
 
         //echo error if exists
         if ($error) {
-          echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+          send_response(500, false, 'Error', array('error' => $error));
         }
       }
-      echo json_encode(array('success' => true, 'message' => 'Sensors found', 'qty' => count($sensors), 'sensors' => $sensors));
+      send_response(200, true, 'Sensor data', $sensors);
     } else {
-      echo json_encode(array('success' => false, 'message' => 'Sensors not found'));
+      send_response(404, false, 'Sensor data not found');
     }
 
     $stmt->close();
@@ -373,8 +376,8 @@ switch ($_GET['action']) {
   case 'getSensorsDataByDates':
     $sensors = array();
 
-    $from = $_GET['from'];
-    $to = $_GET['to'];
+    $from = get_date($_GET['from']);
+    $to = get_date($_GET['to']);
 
     //get sensor info from database using prepared statements
     $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt FROM `sensor_info` ORDER BY `createdAt` DESC");
@@ -393,7 +396,7 @@ switch ($_GET['action']) {
 
     //echo error if exists
     if ($error) {
-      echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+      send_response(500, false, 'Error', array('error' => $error));
     }
 
     //echo result if exists
@@ -422,12 +425,12 @@ switch ($_GET['action']) {
 
         //echo error if exists
         if ($error) {
-          echo json_encode(array('success' => false, 'message' => 'Error', 'error' => $error));
+          send_response(500, false, 'Error', array('error' => $error));
         }
       }
-      echo json_encode(array('success' => true, 'message' => 'Sensors found', 'qty' => count($sensors), 'sensors' => $sensors));
+      send_response(200, true, 'Sensor data', $sensors);
     } else {
-      echo json_encode(array('success' => false, 'message' => 'Sensors not found'));
+      send_response(404, false, 'Sensor data not found');
     }
 
     $stmt->close();
