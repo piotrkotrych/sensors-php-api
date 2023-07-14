@@ -33,6 +33,6 @@ function get_date($date)
 function send_response($http_code, $success, $message, $data = null)
 {
   http_response_code($http_code);
-  echo json_encode(array('success' => $success, 'message' => $message, 'data' => $data));
+  echo json_encode(array('success' => $success, 'message' => $message, 'sensors' => $data));
   exit();
 }

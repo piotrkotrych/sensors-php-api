@@ -104,19 +104,21 @@ switch ($_GET['action']) {
     $sensor = array();
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt FROM `sensor_info` WHERE `chipid` = ? ORDER BY `createdAt` DESC LIMIT 1");
-    $stmt->bind_param("i", $chipid);
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data WHERE chipid = ?) as is_recent FROM `sensor_info` WHERE `chipid` = ? ORDER BY `createdAt` DESC LIMIT 1");
+    $stmt->bind_param("ii", $chipid, $chipid);
     $stmt->execute();
 
     //bind result set columns to variables
-    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt);
+    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt, $is_recent);
 
     //get error
     $error = $stmt->error;
 
     //get result
     while ($stmt->fetch()) {
-      $sensor = array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt);
+      $is_recent = $is_recent ? true : false;
+      //add data to array
+      $sensor = array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt, 'is_recent' => $is_recent);
     }
 
     //echo error if exists
@@ -182,19 +184,20 @@ switch ($_GET['action']) {
     $sensor = array();
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt FROM `sensor_info` WHERE `chipid` = ? ORDER BY `createdAt` DESC LIMIT 1");
-    $stmt->bind_param("i", $chipid);
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data WHERE chipid = ?) as is_recent FROM `sensor_info` WHERE `chipid` = ? ORDER BY `createdAt` DESC LIMIT 1");
+    $stmt->bind_param("ii", $chipid, $chipid);
     $stmt->execute();
 
     //bind result set columns to variables
-    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt);
+    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt, $is_recent);
 
     //get error
     $error = $stmt->error;
 
     //get result
     while ($stmt->fetch()) {
-      $sensor = array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt);
+      $is_recent = $is_recent ? true : false;
+      $sensor = array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt, 'is_recent' => $is_recent);
     }
 
     //echo error if exists
@@ -251,18 +254,19 @@ switch ($_GET['action']) {
     $sensors = array();
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt FROM `sensor_info` ORDER BY `createdAt` DESC");
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
     $stmt->execute();
 
     //bind result set columns to variables
-    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt);
+    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt, $is_recent);
 
     //get error
     $error = $stmt->error;
 
     //get result
     while ($stmt->fetch()) {
-      array_push($sensors, array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt));
+      $is_recent = $is_recent ? true : false;
+      array_push($sensors, array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt, 'is_recent' => $is_recent));
     }
 
     //echo error if exists
@@ -290,6 +294,7 @@ switch ($_GET['action']) {
 
         //get result
         while ($stmt->fetch()) {
+          $is_recent = $is_recent ? true : false;
           //add data to array
           array_push($sensors[$key]['data'], array('temperature' => $temperature, 'humidity' => $humidity, 'pressure' => $pressure, 'createdAt' => $createdAt));
         }
@@ -312,18 +317,19 @@ switch ($_GET['action']) {
     $sensors = array();
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt FROM `sensor_info` ORDER BY `createdAt` DESC");
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
     $stmt->execute();
 
     //bind result set columns to variables
-    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt);
+    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt, $is_recent);
 
     //get error
     $error = $stmt->error;
 
     //get result
     while ($stmt->fetch()) {
-      array_push($sensors, array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt));
+      $is_recent = $is_recent ? true : false;
+      array_push($sensors, array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt, 'is_recent' => $is_recent));
     }
 
     //echo error if exists
@@ -376,18 +382,20 @@ switch ($_GET['action']) {
     $to = get_date($_GET['to']);
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt FROM `sensor_info` ORDER BY `createdAt` DESC");
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
     $stmt->execute();
 
     //bind result set columns to variables
-    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt);
+    $stmt->bind_result($chipid, $location, $createdAt, $updatedAt, $is_recent);
 
     //get error
     $error = $stmt->error;
 
     //get result
     while ($stmt->fetch()) {
-      array_push($sensors, array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt));
+      $is_recent = $is_recent ? true : false;
+
+      array_push($sensors, array('chipid' => $chipid, 'location' => $location, 'createdAt' => $createdAt, 'updatedAt' => $updatedAt, 'is_recent' => $is_recent));
     }
 
     //echo error if exists
@@ -463,20 +471,23 @@ switch ($_GET['action']) {
     //for each sensors[key] as $key, add data to array from database sensor_data table and left join sensor_info table
     foreach ($sensors as $key => $sensor) {
       //get sensor data from database using prepared statements
-      $stmt = $conn->prepare("SELECT temperature, humidity, pressure, sensor_data.createdAt FROM `sensor_data` LEFT JOIN `sensor_info` ON sensor_data.chipid = sensor_info.chipid WHERE sensor_info.location = ? ORDER BY sensor_data.createdAt DESC LIMIT ?");
+      $stmt = $conn->prepare("SELECT location, temperature, humidity, pressure, sensor_data.createdAt, CASE
+    WHEN TIMESTAMPDIFF(HOUR, sensor_data.createdAt, NOW()) < 1 THEN 'true' ELSE 'false' END as is_recent 
+    FROM `sensor_data` LEFT JOIN `sensor_info` ON sensor_data.chipid = sensor_info.chipid WHERE sensor_info.location = ? ORDER BY sensor_data.createdAt DESC LIMIT ?");
       $stmt->bind_param("si", $key, $limit);
       $stmt->execute();
 
       //bind result set columns to variables
-      $stmt->bind_result($temperature, $humidity, $pressure, $createdAt);
+      $stmt->bind_result($location, $temperature, $humidity, $pressure, $createdAt, $is_recent);
 
       //get error
       $error = $stmt->error;
 
       //get result
       while ($stmt->fetch()) {
+        $is_recent = ($is_recent == 'true');
         //add data to array
-        array_push($sensors[$key], array('temperature' => $temperature, 'humidity' => $humidity, 'pressure' => $pressure, 'createdAt' => $createdAt));
+        array_push($sensors[$key], array('location' => $location, 'temperature' => $temperature, 'humidity' => $humidity, 'pressure' => $pressure, 'createdAt' => $createdAt, 'is_recent' => $is_recent));
       }
 
       //echo error if exists
