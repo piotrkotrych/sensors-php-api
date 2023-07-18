@@ -104,7 +104,7 @@ switch ($_GET['action']) {
     $sensor = array();
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data WHERE chipid = ?) as is_recent FROM `sensor_info` WHERE `chipid` = ? ORDER BY `createdAt` DESC LIMIT 1");
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data WHERE chipid = ? and temperature is not null) as is_recent FROM `sensor_info` WHERE `chipid` = ? ORDER BY `createdAt` DESC LIMIT 1");
     $stmt->bind_param("ii", $chipid, $chipid);
     $stmt->execute();
 
@@ -184,7 +184,7 @@ switch ($_GET['action']) {
     $sensor = array();
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data WHERE chipid = ?) as is_recent FROM `sensor_info` WHERE `chipid` = ? ORDER BY `createdAt` DESC LIMIT 1");
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data WHERE chipid = ? and temperature is not null) as is_recent FROM `sensor_info` WHERE `chipid` = ? ORDER BY `createdAt` DESC LIMIT 1");
     $stmt->bind_param("ii", $chipid, $chipid);
     $stmt->execute();
 
@@ -254,7 +254,7 @@ switch ($_GET['action']) {
     $sensors = array();
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid and temperature is not null) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
     $stmt->execute();
 
     //bind result set columns to variables
@@ -317,7 +317,7 @@ switch ($_GET['action']) {
     $sensors = array();
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid and temperature is not null) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
     $stmt->execute();
 
     //bind result set columns to variables
@@ -382,7 +382,7 @@ switch ($_GET['action']) {
     $to = get_date($_GET['to']);
 
     //get sensor info from database using prepared statements
-    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
+    $stmt = $conn->prepare("SELECT chipid, location, createdAt, updatedAt, (SELECT TIMESTAMPDIFF(SECOND, MAX(createdAt), NOW()) < 3600 FROM sensor_data as sd WHERE sd.chipid = sensor_info.chipid and temperature is not null) as is_recent FROM `sensor_info` ORDER BY `createdAt` DESC");
     $stmt->execute();
 
     //bind result set columns to variables
@@ -473,7 +473,7 @@ switch ($_GET['action']) {
       //get sensor data from database using prepared statements
       $stmt = $conn->prepare("SELECT location, temperature, humidity, pressure, sensor_data.createdAt, CASE
     WHEN TIMESTAMPDIFF(HOUR, sensor_data.createdAt, NOW()) < 1 THEN 'true' ELSE 'false' END as is_recent 
-    FROM `sensor_data` LEFT JOIN `sensor_info` ON sensor_data.chipid = sensor_info.chipid WHERE sensor_info.location = ? ORDER BY sensor_data.createdAt DESC LIMIT ?");
+    FROM `sensor_data` LEFT JOIN `sensor_info` ON sensor_data.chipid = sensor_info.chipid WHERE sensor_info.location = ? and temperature is not null ORDER BY sensor_data.createdAt DESC LIMIT ?");
       $stmt->bind_param("si", $key, $limit);
       $stmt->execute();
 
